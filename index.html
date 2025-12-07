@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная картинка</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .image-container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
+        
+        /* Стили для точек */
+        .point {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: #ff4757;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            z-index: 10;
+        }
+        
+        .point:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            background: #ff2e43;
+        }
+        
+        /* Пульсация точки */
+        .point::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            animation: pulse 1.5s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+        
+        /* Всплывающее окно */
+        .popup {
+            display: none;
+            position: absolute;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 320px;
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .popup-title {
+            font-size: 20px;
+            color: #333;
+            margin: 0;
+        }
+        
+        .close-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #ff2e43;
+        }
+        
+        .popup-content {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .popup {
+                width: 280px;
+                padding: 20px;
+            }
+            
+            .point {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .popup {
+                width: 250px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 20px; color: #333;">Интерактивная картинка</h1>
+        
+        <div class="image-container">
+            <!-- ЗАМЕНИТЕ ЭТУ ССЫЛКУ НА ВАШУ КАРТИНКУ -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Tabula_geographica_Europae_ad_statum%2C_quo_sub_finem_Anni_1400_post_Christ._nat._fuit.jpg" alt="Пример картинки" class="main-image" id="mainImage">
+            
+            <!-- ТОЧКА 1 -->
+            <div class="point" style="top: 30%; left: 40%;" data-point="1">1</div>
+            
+            <!-- ТОЧКА 2 -->
+            <div class="point" style="top: 60%; left: 70%;" data-point="2">2</div>
+            
+            <!-- ТОЧКА 3 -->
+            <div class="point" style="top: 45%; left: 20%;" data-point="3">3</div>
+            
+            <!-- ВСПЛЫВАЮЩИЕ ОКНА -->
+            <div class="popup" id="popup1" style="top: 40%; left: 50%;">
+                <div class="popup-header">
+                    <h3 class="popup-title">Точка 1</h3>
+                    <button class="close-btn" onclick="closePopup('popup1')">×</button>
+                </div>
+                <div class="popup-content">
+                    <p>Это описание для первой точки. Здесь может быть любой текст, картинки, ссылки.</p>
+                    <p>Можно писать много информации, которая будет появляться прямо на картинке.</p>
+                </div>
+            </div>
+            
+            <div class="popup" id="popup2" style="top: 60%; left: 70%;">
+                <div class="popup-header">
+                    <h3 class="popup-title">Точка 2</h3>
+                    <button class="close-btn" onclick="closePopup('popup2')">×</button>
+                </div>
+                <div class="popup-content">
+                    <p>Описание для второй точки. Полностью настраиваемый текст.</p>
+                    <ul>
+                        <li>Можно добавлять списки</li>
+                        <li>И картинки</li>
+                        <li>И даже видео</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="popup" id="popup3" style="top: 50%; left: 30%;">
+                <div class="popup-header">
+                    <h3 class="popup-title">Точка 3</h3>
+                    <button class="close-btn" onclick="closePopup('popup3')">×</button>
+                </div>
+                <div class="popup-content">
+                    <p>Третья точка с интересной информацией.</p>
+                    <p><strong>Жирный текст</strong> и <em>курсив</em> тоже работают!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #777; font-size: 14px;">
+            Кликните на цифры, чтобы увидеть информацию
+        </div>
+    </div>
+
+    <script>
+        // Открытие popup при клике на точку
+        document.querySelectorAll('.point').forEach(point => {
+            point.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const pointNumber = this.getAttribute('data-point');
+                const popupId = 'popup' + pointNumber;
+                
+                // Закрываем все открытые popup
+                document.querySelectorAll('.popup').forEach(popup => {
+                    popup.style.display = 'none';
+                });
+                
+                // Открываем нужный popup
+                const popup = document.getElementById(popupId);
+                if (popup) {
+                    popup.style.display = 'block';
+                    
+                    // Позиционируем popup рядом с точкой
+                    const pointRect = this.getBoundingClientRect();
+                    const containerRect = document.querySelector('.image-container').getBoundingClientRect();
+                    
+                    // Проверяем, чтобы popup не выходил за границы
+                    let left = pointRect.left - containerRect.left + this.offsetWidth / 2;
+                    let top = pointRect.top - containerRect.top + this.offsetHeight / 2;
+                    
+                    // Смещаем немного от точки
+                    popup.style.left = left + 40 + 'px';
+                    popup.style.top = top + 'px';
+                    
+                    // Если popup выходит за правый край, показываем слева от точки
+                    if (left + popup.offsetWidth > containerRect.width) {
+                        popup.style.left = (left - popup.offsetWidth - 20) + 'px';
+                    }
+                    
+                    // Если popup выходит за нижний край
+                    if (top + popup.offsetHeight > containerRect.height) {
+                        popup.style.top = (top - popup.offsetHeight) + 'px';
+                    }
+                }
+            });
+        });
+        
+        // Функция закрытия popup
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+        
+        // Закрытие popup при клике вне его
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.popup') && !e.target.closest('.point')) {
+                document.querySelectorAll('.popup').forEach(popup => {
+                    popup.style.display = 'none';
+                });
+            }
+        });
+        
+        // Адаптация при изменении размера окна
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('.popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
