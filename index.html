@@ -79,7 +79,7 @@
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             width: 500px; /* Увеличил на 80px */
-            max-height: 500px; /* Ограничиваем максимальную высоту */
+            max-height: 400px; /* Ограничиваем максимальную высоту */
             overflow-y: auto; /* Добавляем прокрутку если текст не помещается */
             z-index: 100;
             animation: fadeIn 0.3s ease;
@@ -167,7 +167,7 @@
             
             <div class="point" style="top: 75%; left: 40%;" data-point="5">5</div>
             
-            <div class="point" style="top: 63%; left: 34%;" data-point="2">2</div>
+            <div class="point" style="top: 60%; left: 32%;" data-point="2">2</div>
 
             <div class="point" style="top: 30%; left: 40%;" data-point="1">1</div>
 
@@ -272,15 +272,33 @@
                     popup.style.left = left + 40 + 'px';
                     popup.style.top = top + 'px';
                     
-                    // Если popup выходит за правый край, показываем слева от точки
-                    if (left + popup.offsetWidth > containerRect.width) {
-                        popup.style.left = (left - popup.offsetWidth - 20) + 'px';
+                    // 1. Проверка ПРАВОГО края
+                    if (left + popupWidth + offset > containerRect.width) {
+                        popup.style.left = (left - popupWidth - offset) + 'px';
+                    }
+
+                    const popupLeft = parseInt(popup.style.left);
+                    if (popupLeft < 0) {
+                        popup.style.left = (left + offset) + 'px';
                     }
                     
-                    // Если popup выходит за нижний край
-                    if (top + popup.offsetHeight > containerRect.height) {
-                        popup.style.top = (top - popup.offsetHeight) + 'px';
+                    if (top + popupHeight > containerRect.height) {
+                        popup.style.top = (top - popupHeight) + 'px';
                     }
+
+                    const popupTop = parseInt(popup.style.top);
+                    if (popupTop < 0) {
+                        popup.style.top = (top + this.offsetHeight + offset) + 'px';
+                    }
+
+                    if (popupTop < 0 || popupTop + popupHeight > containerRect.height) {
+                        popup.style.top = '50%';
+                        popup.style.left = '50%';
+                        popup.style.transform = 'translate(-50%, -50%)';
+                    }
+
+
+                    
                 }
             });
         });
