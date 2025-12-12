@@ -242,75 +242,76 @@
         </div>
     </div>
 
-    <script>
-        // Открытие popup при клике на точку
-        document.querySelectorAll('.point').forEach(point => {
-            point.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const pointNumber = this.getAttribute('data-point');
-                const popupId = 'popup' + pointNumber;
-                
-                // Закрываем все открытые popup
-                document.querySelectorAll('.popup').forEach(popup => {
-                    popup.style.display = 'none';
-                });
-                
-                // Открываем нужный popup
-                const popup = document.getElementById(popupId);
-                if (popup) {
-                    popup.style.display = 'block';
-                    
-                    // Позиционируем popup рядом с точкой
-                    const pointRect = this.getBoundingClientRect();
-                    const containerRect = document.querySelector('.image-container').getBoundingClientRect();
-                    
-                    // Проверяем, чтобы popup не выходил за границы
-                    let left = pointRect.left - containerRect.left + this.offsetWidth / 2;
-                    let top = pointRect.top - containerRect.top + this.offsetHeight / 2;
-                    
-                    // Смещаем немного от точки
-                    popup.style.left = left + 40 + 'px';
-                    popup.style.top = top + 'px';
-                                        
-                    // Если popup выходит за правый край, показываем слева от точки
-                    if (left + popup.offsetWidth > containerRect.width) {
-                        popup.style.left = (left - popup.offsetWidth - 20) + 'px';
-                    }
-                    
-                    // Если popup выходит за нижний край
-                    if (top + popup.offsetHeight > containerRect.height) {
-                        popup.style.top = (top - popup.offsetHeight) + 'px';
-                        
-                    if (pointNumber === '1') {
-                        popup.style.top = (top + this.offsetHeight + 20) + 'px';
-                        popup.style.left = left + 'px';
-                    }
 
-                    
-                }
-            });
-        });
-        
-        // Функция закрытия popup
-        function closePopup(popupId) {
-            document.getElementById(popupId).style.display = 'none';
-        }
-        
-        // Закрытие popup при клике вне его
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.popup') && !e.target.closest('.point')) {
-                document.querySelectorAll('.popup').forEach(popup => {
-                    popup.style.display = 'none';
-                });
-            }
-        });
-        
-        // Адаптация при изменении размера окна
-        window.addEventListener('resize', function() {
+    <script>
+    // Открытие popup при клике на точку
+    document.querySelectorAll('.point').forEach(point => {
+        point.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const pointNumber = this.getAttribute('data-point');
+            const popupId = 'popup' + pointNumber;
+            
+            // Закрываем все открытые popup
             document.querySelectorAll('.popup').forEach(popup => {
                 popup.style.display = 'none';
             });
+            
+            // Открываем нужный popup
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.style.display = 'block';
+                
+                // Позиционируем popup рядом с точкой
+                const pointRect = this.getBoundingClientRect();
+                const containerRect = document.querySelector('.image-container').getBoundingClientRect();
+                
+                // Базовые координаты
+                let left = pointRect.left - containerRect.left + this.offsetWidth / 2;
+                let top = pointRect.top - containerRect.top + this.offsetHeight / 2;
+                
+                // Всегда показываем справа от точки
+                popup.style.left = left + 40 + 'px';
+                popup.style.top = top + 'px';
+                                            
+                // Если popup выходит за правый край, показываем слева от точки
+                if (left + popup.offsetWidth > containerRect.width) {
+                    popup.style.left = (left - popup.offsetWidth - 20) + 'px';
+                }
+                
+                // Если popup выходит за нижний край
+                if (top + popup.offsetHeight > containerRect.height) {
+                    popup.style.top = (top - popup.offsetHeight) + 'px';
+                }
+                
+                // ОСОБЫЙ СЛУЧАЙ: Для точки 1 показываем снизу
+                if (pointNumber === '1') {
+                    popup.style.top = (top + this.offsetHeight + 40) + 'px';
+                    popup.style.left = left + 'px';
+                }
+            }
         });
-    </script>
+    });
+    
+    // Функция закрытия popup
+    function closePopup(popupId) {
+        document.getElementById(popupId).style.display = 'none';
+    }
+    
+    // Закрытие popup при клике вне его
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.popup') && !e.target.closest('.point')) {
+            document.querySelectorAll('.popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+        }
+    });
+    
+    // Адаптация при изменении размера окна
+    window.addEventListener('resize', function() {
+        document.querySelectorAll('.popup').forEach(popup => {
+            popup.style.display = 'none';
+        });
+    });
+</script>
 </body>
 </html>
