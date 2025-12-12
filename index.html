@@ -271,32 +271,20 @@
                     // Смещаем немного от точки
                     popup.style.left = left + 40 + 'px';
                     popup.style.top = top + 'px';
-                    
-                    // 1. Проверка ПРАВОГО края
-                    if (left + popupWidth + offset > containerRect.width) {
-                        popup.style.left = (left - popupWidth - offset) + 'px';
-                    }
-
-                    const popupLeft = parseInt(popup.style.left);
-                    if (popupLeft < 0) {
-                        popup.style.left = (left + offset) + 'px';
+                                        
+                    // Если popup выходит за правый край, показываем слева от точки
+                    if (left + popup.offsetWidth > containerRect.width) {
+                        popup.style.left = (left - popup.offsetWidth - 20) + 'px';
                     }
                     
-                    if (top + popupHeight > containerRect.height) {
-                        popup.style.top = (top - popupHeight) + 'px';
+                    // Если popup выходит за нижний край
+                    if (top + popup.offsetHeight > containerRect.height) {
+                        popup.style.top = (top - popup.offsetHeight) + 'px';
+                        
+                    if (pointNumber === '1') {
+                        popup.style.top = (top + this.offsetHeight + 20) + 'px';
+                        popup.style.left = left + 'px';
                     }
-
-                    const popupTop = parseInt(popup.style.top);
-                    if (popupTop < 0) {
-                        popup.style.top = (top + this.offsetHeight + offset) + 'px';
-                    }
-
-                    if (popupTop < 0 || popupTop + popupHeight > containerRect.height) {
-                        popup.style.top = '50%';
-                        popup.style.left = '50%';
-                        popup.style.transform = 'translate(-50%, -50%)';
-                    }
-
 
                     
                 }
